@@ -1,4 +1,21 @@
-Flurry-Unity-3D
-===============
+Flurry plugin for Unity 3D
+=========
+---
+Simple and compact Flurry Analytics iOS and Android implementation.
 
-iOS and Android implementation for Unity 3D
+
+Bootstrap
+--------------
+```sh
+TODO
+```
+
+Version
+----
+
+0.1
+
+License
+----
+
+MIT
