@@ -28,6 +28,16 @@ using System.Collections.Generic;
 namespace Analytics
 {
 	/// <summary>
+	/// User gender
+	/// </summary>
+	public enum UserGender
+	{
+		None = 0,
+		Male,
+		Female
+	}
+
+	/// <summary>
 	/// I analytics.
 	/// </summary>
 	public interface IAnalytics
@@ -36,6 +46,12 @@ namespace Analytics
 		/// Start a Flurry session for the project.
 		/// </summary>
 		void Start();
+
+		/// <summary>
+		/// Explicitly specifies the App Version that Flurry will use to group Analytics data.
+		/// </summary>
+		/// <param name="version">The custom version name.</param>
+		void LogAppVersion(string version);
 
 		/// <summary>
 		/// Records a custom event specified by eventName.
@@ -109,5 +125,25 @@ namespace Analytics
 		/// <param name="message">The message to associate with the error.</param>
 		/// <param name="exception">The exception object to report.</param>
 		void LogError(string errorID, string message);
+
+		/// <summary>
+		/// Assign a unique id for a user in your app.
+		/// </summary>
+		/// <param name="userID">The app id for a user.</param>
+		void LogUserID(string userID);
+
+		/// <summary>
+		/// Set your user's age in years.
+		/// </summary>
+		/// <param name="age">Reported age of user.</param>
+		void LogUserAge(int age);
+
+		/// <summary>
+		/// Set your user's gender.
+		/// </summary>
+		/// <param name="gender">
+		/// Reported gender of user. Allowable values are 'm' or 'c' 'f'
+		/// </param>
+		void LogUserGender(UserGender gender);
 	}
 }

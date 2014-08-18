@@ -35,12 +35,10 @@ namespace Analytics
     /// </summary>
     public sealed class Flurry : MonoSingleton<Flurry>, IAnalytics
     {
-#if BUILD_TARGET_ANDROID
+#if UNITY_IOS
+        private static readonly string FLURRY_UNIQUE_KEY = "";
+#elif UNITY_ANDROID
         private static readonly string FLURRY_UNIQUE_KEY = "KSJKSG5J5WNX86N7284C";
-#elif BUILD_TARGET_IPHONE
-        private static readonly string FLURRY_UNIQUE_KEY = "";
-#elif BUILD_TARGET_IPAD
-        private static readonly string FLURRY_UNIQUE_KEY = "";
 #endif
 		
         /// <summary>
@@ -69,16 +67,6 @@ namespace Analytics
         /// <summary>
         /// 
         /// </summary>
-        public enum FlurryGender
-        {
-            FlurryGenderNone = 0,
-            FlurryGenderMale,
-            FlurryGenderFemale
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         private bool m_IsSessionStarted;
 
         /// <summary>
@@ -102,10 +90,10 @@ namespace Analytics
 
 #elif UNITY_IOS
             if (pauseStatus)
-                iPhonePlatform.PauseBackgroundSession();
+                FlurryIOS.PauseBackgroundSession();
 #elif UNITY_ANDROID
             if (pauseStatus)
-                AndroidPlatform.OnEndSession();
+                FlurryAndroid.OnEndSession();
             else
                 StartSession();
 #endif
@@ -117,7 +105,7 @@ namespace Analytics
         protected override void OnDestroy()
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-            AndroidPlatform.Dispose();
+            FlurryAndroid.Dispose();
 #endif
 
 			base.OnDestroy();
@@ -146,12 +134,27 @@ namespace Analytics
 #if UNITY_EDITOR
 
 #elif UNITY_IOS
-		    iPhonePlatform.StartSession(FLURRY_UNIQUE_KEY);
+		    FlurryIOS.StartSession(FLURRY_UNIQUE_KEY);
 #elif UNITY_ANDROID
-		    AndroidPlatform.OnStartSession(FLURRY_UNIQUE_KEY);
+		    FlurryAndroid.OnStartSession(FLURRY_UNIQUE_KEY);
 #endif
 
             m_IsSessionStarted = true;
+        }
+
+        /// <summary>
+        /// Explicitly specifies the App Version that Flurry will use to group Analytics data.
+        /// </summary>
+        /// <param name="version">The custom version name.</param>
+        public void LogAppVersion(string version)
+        {
+#if UNITY_EDITOR
+
+#elif UNITY_IOS
+            FlurryIOS.SetAppVersion(version);
+#elif UNITY_ANDOIRD
+            FlurryAndoird.SetVersionName(version);
+#endif
         }
 
 		/// <summary>
@@ -166,9 +169,9 @@ namespace Analytics
 #if UNITY_EDITOR
 
 #elif UNITY_IOS
-        iPhonePlatform.LogEvent(eventName);
+        FlurryIOS.LogEvent(eventName);
 #elif UNITY_ANDROID
-        AndroidPlatform.LogEvent(eventName);
+        FlurryAndroid.LogEvent(eventName);
 #endif
         }
 
@@ -187,9 +190,9 @@ namespace Analytics
 #if UNITY_EDITOR
 
 #elif UNITY_IOS
-        iPhonePlatform.LogEvent(eventName, parameters);
+        FlurryIOS.LogEvent(eventName, parameters);
 #elif UNITY_ANDOIRD
-        AndroidPlatform.LogEvent(eventName, parameters);
+        FlurryAndroid.LogEvent(eventName, parameters);
 #endif
         }
 
@@ -206,9 +209,9 @@ namespace Analytics
 #if UNITY_EDITOR
 
 #elif UNITY_IOS
-        iPhonePlatform.LogEvent(eventName, timed);
+        FlurryIOS.LogEvent(eventName, timed);
 #elif UNITY_ANDROID
-        AndroidPlatform.LogEvent(eventName, timed);
+        FlurryAndroid.LogEvent(eventName, timed);
 #endif
         }
 
@@ -224,9 +227,9 @@ namespace Analytics
 #if UNITY_EDITOR
 
 #elif UNITY_IOS
-		iPhonePlatform.LogEvent(eventName, parameters, true);
+		FlurryIOS.LogEvent(eventName, parameters, true);
 #elif UNITY_ANDROID
-		AndroidPlatform.LogEvent(eventName, parameters, true);
+		FlurryAndroid.LogEvent(eventName, parameters, true);
 #endif
         }
 
@@ -245,9 +248,9 @@ namespace Analytics
 #if UNITY_EDITOR
 			
 #elif UNITY_IOS
-			iPhonePlatform.LogEvent(eventName, parameters, true);
+			FlurryIOS.LogEvent(eventName, parameters, true);
 #elif UNITY_ANDROID
-			AndroidPlatform.LogEvent(eventName, parameters, true);
+			FlurryAndroid.LogEvent(eventName, parameters, true);
 #endif
 		}
 
@@ -264,9 +267,9 @@ namespace Analytics
 #if UNITY_EDITOR
 
 #elif UNITY_IOS
-            iPhonePlatform.EndTimedEvent(eventName, null);
+            FlurryIOS.EndTimedEvent(eventName, null);
 #elif UNITY_ANDROID
-            AndroidPlatform.EndTimedEvent(eventName, null);
+            FlurryAndroid.EndTimedEvent(eventName, null);
 #endif
         }
 
@@ -286,9 +289,9 @@ namespace Analytics
 #if UNITY_EDITOR
 			
 #elif UNITY_IOS
-			iPhonePlatform.EndTimedEvent(eventName, parameters);
+			FlurryIOS.EndTimedEvent(eventName, parameters);
 #elif UNITY_ANDROID
-			AndroidPlatform.EndTimedEvent(eventName, parameters);
+			FlurryAndroid.EndTimedEvent(eventName, parameters);
 #endif
 		}
 
@@ -303,10 +306,57 @@ namespace Analytics
 #if UNITY_EDITOR
 			
 #elif UNITY_IOS
-			iPhonePlatform.LogError(errorName, message, null);
+			FlurryIOS.LogError(errorName, message, null);
 #elif UNITY_ANDROID
-			AndroidPlatform.OnError(errorName, message, null);
+			FlurryAndroid.OnError(errorName, message, null);
 #endif
 		}
+
+        /// <summary>
+        /// Assign a unique id for a user in your app.
+        /// </summary>
+        /// <param name="userID">The app id for a user.</param>
+        public void LogUserID(string userID)
+        {
+#if UNITY_EDITOR
+            
+#elif UNITY_IOS
+            FlurryIOS.SetUserId(userID);
+#elif UNITY_ANDROID
+            FlurryAndroid.SetUserId(userID);
+#endif
+        }
+
+        /// <summary>
+        /// Set your user's age in years.
+        /// </summary>
+        /// <param name="age">Reported age of user.</param>
+        public void LogUserAge(int age)
+        {
+#if UNITY_EDITOR
+            
+#elif UNITY_IOS
+            FlurryIOS.SetAge(age);
+#elif UNITY_ANDROID
+            FlurryAndroid.SetAge(age);
+#endif
+        }
+
+        /// <summary>
+        /// Set your user's gender.
+        /// </summary>
+        /// <param name="gender">
+        /// Reported gender of user. Allowable values are 'm' or 'c' 'f'
+        /// </param>
+        public void LogUserGender(UserGender gender)
+        {
+#if UNITY_EDITOR
+            
+#elif UNITY_IOS
+            //FlurryIOS.SetGender();
+#elif UNITY_ANDROID
+            //FlurryAndroid.SetGender();
+#endif          
+        }
 	}
 }
