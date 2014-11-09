@@ -32,9 +32,9 @@ public class MonoSingleton<T> : MonoBehaviour where T : MonoBehaviour
 	/// <summary>
 	/// 
 	/// </summary>
-	private static T _Instance;
+	private static T s_Instance;
 
-	private static bool _WasDestryed;
+	private static bool s_IsDestroyed;
 
 	/// <summary>
 	/// singleton property
@@ -43,23 +43,23 @@ public class MonoSingleton<T> : MonoBehaviour where T : MonoBehaviour
 	{
 	    get
 	    {
-	        if (_WasDestryed)
+	        if (s_IsDestroyed)
 	            return null;
 
-	        if (_Instance == null)
+	        if (s_Instance == null)
 	        {
-	            _Instance = GameObject.FindObjectOfType(typeof(T)) as T;
+	            s_Instance = GameObject.FindObjectOfType(typeof(T)) as T;
 
-	            if (_Instance == null)
+	            if (s_Instance == null)
 	            {
 	                GameObject gameObject = new GameObject(typeof(T).Name);
 	                GameObject.DontDestroyOnLoad(gameObject);
 
-	                _Instance = gameObject.AddComponent(typeof(T)) as T;
+	                s_Instance = gameObject.AddComponent(typeof(T)) as T;
 	            }
 	        }
 
-	        return _Instance;
+	        return s_Instance;
 	    }
 	}
 
@@ -68,10 +68,10 @@ public class MonoSingleton<T> : MonoBehaviour where T : MonoBehaviour
 	/// </summary>
 	protected virtual void OnDestroy()
 	{
-	    if (_Instance)
-	        Destroy(_Instance);
+	    if (s_Instance)
+	        Destroy(s_Instance);
 
-	    _Instance = null;
-	    _WasDestryed = true;
+	    s_Instance = null;
+	    s_IsDestroyed = true;
 	}
 }

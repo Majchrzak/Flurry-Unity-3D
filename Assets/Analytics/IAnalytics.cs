@@ -38,7 +38,7 @@ namespace Analytics
 	}
 
 	/// <summary>
-	/// I analytics.
+	/// I analytics interace.
 	/// </summary>
 	public interface IAnalytics
 	{

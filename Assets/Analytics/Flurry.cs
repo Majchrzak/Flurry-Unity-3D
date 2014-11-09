@@ -38,7 +38,7 @@ namespace Analytics
 #if UNITY_IOS
         private static readonly string FLURRY_UNIQUE_KEY = "";
 #elif UNITY_ANDROID
-        private static readonly string FLURRY_UNIQUE_KEY = "KSJKSG5J5WNX86N7284C";
+        private static readonly string FLURRY_UNIQUE_KEY = "";
 #endif
 		
         /// <summary>
