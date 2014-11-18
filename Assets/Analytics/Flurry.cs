@@ -94,8 +94,6 @@ namespace Analytics
 #elif UNITY_ANDROID
             if (pauseStatus)
                 FlurryAndroid.OnEndSession();
-            else
-                StartSession();
 #endif
         }
 
@@ -227,9 +225,9 @@ namespace Analytics
 #if UNITY_EDITOR
 
 #elif UNITY_IOS
-		FlurryIOS.LogEvent(eventName, parameters, true);
+		FlurryIOS.LogEvent(eventName);
 #elif UNITY_ANDROID
-		FlurryAndroid.LogEvent(eventName, parameters, true);
+		FlurryAndroid.LogEvent(eventName);
 #endif
         }
 
@@ -246,7 +244,7 @@ namespace Analytics
 		public void BeginLogEvent(string eventName, IDictionary<string, string> parameters)
 		{
 #if UNITY_EDITOR
-			
+
 #elif UNITY_IOS
 			FlurryIOS.LogEvent(eventName, parameters, true);
 #elif UNITY_ANDROID
@@ -306,9 +304,9 @@ namespace Analytics
 #if UNITY_EDITOR
 			
 #elif UNITY_IOS
-			FlurryIOS.LogError(errorName, message, null);
+			FlurryIOS.LogError(errorID, message, null);
 #elif UNITY_ANDROID
-			FlurryAndroid.OnError(errorName, message, null);
+			FlurryAndroid.OnError(errorID, message, null);
 #endif
 		}
 
