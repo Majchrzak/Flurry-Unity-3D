@@ -7,7 +7,7 @@ Fully supported:
 * Flurry Android 4.0.0
 
 ### Usage
-Place 'Analycis' folder in your Unity 3D project folder. See Example.cs file for more details.
+Place 'Analycis' folder in your Unity 3D project folder. See TestScene.unity for more details.
 
 ### Version
 0.9.0

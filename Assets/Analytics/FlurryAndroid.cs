@@ -26,7 +26,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using UnityEngine;
 
 namespace Analytics
 {
@@ -296,7 +295,7 @@ namespace Analytics
 		/// <param name="originParameters">
 		/// Add origin attribution with parameters.
 		/// </param>
-		public static void AddOrigin(string originName, string originVersion, IDictionary<string, string> originParameters)
+		public static void AddOrigin(string originName, string originVersion, Dictionary<string, string> originParameters)
 		{
 #if UNITY_ANDROID && !UNITY_EDITOR
 			using (DictionaryConverter converter = new DictionaryConverter(originParameters))
@@ -324,7 +323,7 @@ namespace Analytics
 		/// <param name="parameters">
 		/// A Dictionary of the parameters which should be submitted with this event.
 		/// </param>
-		public static void LogEvent(string eventId, IDictionary<string, string> parameters)
+		public static void LogEvent(string eventId, Dictionary<string, string> parameters)
 		{
 #if UNITY_ANDROID && !UNITY_EDITOR
 			using (DictionaryConverter converter = new DictionaryConverter(parameters))
@@ -355,7 +354,7 @@ namespace Analytics
 		/// A Dictionary of parameters to log with this event.
 		/// </param>
 		/// <param name="timed">True if this event is timed, false otherwise.</param>
-		public static void LogEvent(string eventId, IDictionary<string, string> parameters, bool timed)
+		public static void LogEvent(string eventId, Dictionary<string, string> parameters, bool timed)
 		{
 #if UNITY_ANDROID && !UNITY_EDITOR
 			using (DictionaryConverter converter = new DictionaryConverter(parameters))
@@ -383,7 +382,7 @@ namespace Analytics
 		/// <param name="parameters">
 		/// A Dictionary of parameters to log with this event.
 		/// </param>
-		public static void EndTimedEvent(string eventId, IDictionary<string, string> parameters)
+		public static void EndTimedEvent(string eventId, Dictionary<string, string> parameters)
 		{
 #if UNITY_ANDROID && !UNITY_EDITOR
 			using (DictionaryConverter converter = new DictionaryConverter(parameters))
@@ -454,7 +453,7 @@ namespace Analytics
 		/// </summary>
 		private class DictionaryConverter : AndroidJavaClass
 		{
-			public DictionaryConverter(IDictionary<string, string> dictionary)
+			public DictionaryConverter(Dictionary<string, string> dictionary)
 				: base("java.util.HashMap")
 			{
 				IntPtr put = AndroidJNIHelper.GetMethodID(GetRawClass(), "put", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;");

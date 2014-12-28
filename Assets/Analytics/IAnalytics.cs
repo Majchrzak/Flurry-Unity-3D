@@ -45,7 +45,7 @@ namespace Analytics
 		/// <summary>
 		/// Start a Flurry session for the project.
 		/// </summary>
-		void Start();
+		void StartSession(string apiKeyIOS, string apiKeyAndroid);
 
 		/// <summary>
 		/// Explicitly specifies the App Version that Flurry will use to group Analytics data.

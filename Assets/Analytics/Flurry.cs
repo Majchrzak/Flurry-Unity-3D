@@ -34,13 +34,7 @@ namespace Analytics
     /// Flurry multiplatform implementation
     /// </summary>
     public sealed class Flurry : MonoSingleton<Flurry>, IAnalytics
-    {
-#if UNITY_IOS
-        private static readonly string FLURRY_UNIQUE_KEY = "";
-#elif UNITY_ANDROID
-        private static readonly string FLURRY_UNIQUE_KEY = "";
-#endif
-		
+    {	
         /// <summary>
         /// Log level
         /// </summary>
@@ -94,6 +88,8 @@ namespace Analytics
 #elif UNITY_ANDROID
             if (pauseStatus)
                 FlurryAndroid.OnEndSession();
+            else
+                StartSession();
 #endif
         }
 
@@ -127,14 +123,14 @@ namespace Analytics
         /// Start or continue a Flurry session for the project denoted by apiKey.
         /// </summary>
         /// <param name="apiKey">The API key for this project.</param>
-        public void Start()
+        public void StartSession(string apiKeyIOS, string apiKeyAndroid)
         {
 #if UNITY_EDITOR
 
 #elif UNITY_IOS
-		    FlurryIOS.StartSession(FLURRY_UNIQUE_KEY);
+		    FlurryIOS.StartSession(apiKeyIOS);
 #elif UNITY_ANDROID
-		    FlurryAndroid.OnStartSession(FLURRY_UNIQUE_KEY);
+		    FlurryAndroid.OnStartSession(apiKeyAndroid);
 #endif
 
             m_IsSessionStarted = true;
@@ -225,9 +221,9 @@ namespace Analytics
 #if UNITY_EDITOR
 
 #elif UNITY_IOS
-		FlurryIOS.LogEvent(eventName);
+		FlurryIOS.LogEvent(eventName, parameters, true);
 #elif UNITY_ANDROID
-		FlurryAndroid.LogEvent(eventName);
+		FlurryAndroid.LogEvent(eventName, parameters, true);
 #endif
         }
 
@@ -244,7 +240,7 @@ namespace Analytics
 		public void BeginLogEvent(string eventName, IDictionary<string, string> parameters)
 		{
 #if UNITY_EDITOR
-
+			
 #elif UNITY_IOS
 			FlurryIOS.LogEvent(eventName, parameters, true);
 #elif UNITY_ANDROID
@@ -304,9 +300,9 @@ namespace Analytics
 #if UNITY_EDITOR
 			
 #elif UNITY_IOS
-			FlurryIOS.LogError(errorID, message, null);
+			FlurryIOS.LogError(errorName, message, null);
 #elif UNITY_ANDROID
-			FlurryAndroid.OnError(errorID, message, null);
+			FlurryAndroid.OnError(errorName, message, null);
 #endif
 		}
 

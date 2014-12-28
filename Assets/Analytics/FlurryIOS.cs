@@ -131,7 +131,7 @@ namespace Analytics
 		/// <param name="parameters">
 		/// An immutable copy of map containing Name-Value pairs of parameters.
 		/// </param>
-		public static void AddOrigin(string originName, string originVersion, IDictionary<string, string> parameters)
+		public static void AddOrigin(string originName, string originVersion, Dictionary<string, string> parameters)
 		{
 #if UNITY_IOS && !UNITY_EDITOR
 			string keys = "";
@@ -257,7 +257,7 @@ namespace Analytics
 		/// <param name="parameters">
 		/// An immutable copy of map containing Name-Value pairs of parameters.
 		/// </param>
-		public static void LogEvent(string eventName, IDictionary<string, string> parameters)
+		public static void LogEvent(string eventName, Dictionary<string, string> parameters)
 		{
 #if UNITY_IOS && !UNITY_EDITOR
 			string keys, values;
@@ -308,7 +308,7 @@ namespace Analytics
 		/// An immutable copy of map containing Name-Value pairs of parameters.
 		/// </param>
 		/// <param name="timed">Specifies the event will be timed.</param>
-		public static void LogEvent(string eventName, IDictionary<string, string> parameters, bool timed)
+		public static void LogEvent(string eventName, Dictionary<string, string> parameters, bool timed)
 		{
 #if UNITY_IOS && !UNITY_EDITOR
 			string keys, values;
@@ -328,7 +328,7 @@ namespace Analytics
 		/// <param name="parameters">
 		/// An immutable copy of map containing Name-Value pairs of parameters.
 		/// </param>
-		public static void EndTimedEvent(string eventName, IDictionary<string, string> parameters)
+		public static void EndTimedEvent(string eventName, Dictionary<string, string> parameters)
 		{
 #if UNITY_IOS && !UNITY_EDITOR
 			string keys, values;
@@ -446,7 +446,7 @@ namespace Analytics
 		/// <param name="dictionary"></param>
 		/// <param name="keys"></param>
 		/// <param name="values"></param>
-		private static void ToKeyValue(IDictionary<string, string> dictionary, out string keys, out string values)
+		private static void ToKeyValue(Dictionary<string, string> dictionary, out string keys, out string values)
 		{
 			keys = string.Empty;
 			values = string.Empty;
