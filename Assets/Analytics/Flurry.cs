@@ -61,36 +61,9 @@ namespace Analytics
         /// <summary>
         /// 
         /// </summary>
-        private bool m_IsSessionStarted;
-
-        /// <summary>
-        /// 
-        /// </summary>
         private void Awake()
         {
             Application.RegisterLogCallback(ErrorHandler);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="pauseStatus"></param>
-        private void OnApplicationPause(bool pauseStatus)
-        {
-            if (!m_IsSessionStarted)
-                return;
-			
-#if UNITY_EDITOR
-
-#elif UNITY_IOS
-            if (pauseStatus)
-                FlurryIOS.PauseBackgroundSession();
-#elif UNITY_ANDROID
-            if (pauseStatus)
-                FlurryAndroid.OnEndSession();
-            else
-                StartSession();
-#endif
         }
 
         /// <summary>
@@ -132,8 +105,6 @@ namespace Analytics
 #elif UNITY_ANDROID
 		    FlurryAndroid.OnStartSession(apiKeyAndroid);
 #endif
-
-            m_IsSessionStarted = true;
         }
 
         /// <summary>
@@ -179,7 +150,7 @@ namespace Analytics
 		/// <param name="parameters">
 		/// An immutable copy of map containing Name-Value pairs of parameters.
 		/// </param>
-		public void LogEvent(string eventName, IDictionary<string, string> parameters)
+		public void LogEvent(string eventName, Dictionary<string, string> parameters)
         {
 #if UNITY_EDITOR
 
@@ -221,9 +192,9 @@ namespace Analytics
 #if UNITY_EDITOR
 
 #elif UNITY_IOS
-		FlurryIOS.LogEvent(eventName, parameters, true);
+		FlurryIOS.LogEvent(eventName);
 #elif UNITY_ANDROID
-		FlurryAndroid.LogEvent(eventName, parameters, true);
+		FlurryAndroid.LogEvent(eventName);
 #endif
         }
 
@@ -237,7 +208,7 @@ namespace Analytics
 		/// <param name="parameters">
 		/// An immutable copy of map containing Name-Value pairs of parameters.
 		/// </param>
-		public void BeginLogEvent(string eventName, IDictionary<string, string> parameters)
+		public void BeginLogEvent(string eventName, Dictionary<string, string> parameters)
 		{
 #if UNITY_EDITOR
 			
@@ -278,7 +249,7 @@ namespace Analytics
 		/// <param name="parameters">
 		/// An immutable copy of map containing Name-Value pairs of parameters.
 		/// </param>
-		public void EndLogEvent(string eventName, IDictionary<string, string> parameters)
+		public void EndLogEvent(string eventName, Dictionary<string, string> parameters)
 		{
 #if UNITY_EDITOR
 			
@@ -300,11 +271,11 @@ namespace Analytics
 #if UNITY_EDITOR
 			
 #elif UNITY_IOS
-			FlurryIOS.LogError(errorName, message, null);
+			FlurryIOS.LogError(errorID, message, null);
 #elif UNITY_ANDROID
-			FlurryAndroid.OnError(errorName, message, null);
+			FlurryAndroid.OnError(errorID, message, null);
 #endif
-		}
+        }
 
         /// <summary>
         /// Assign a unique id for a user in your app.
@@ -345,12 +316,12 @@ namespace Analytics
         public void LogUserGender(UserGender gender)
         {
 #if UNITY_EDITOR
-            
+
 #elif UNITY_IOS
-            //FlurryIOS.SetGender();
+            FlurryIOS.SetGender(gender == UserGender.Male ? "m" : gender == UserGender.Female ? "f" : "c");
 #elif UNITY_ANDROID
-            //FlurryAndroid.SetGender();
-#endif          
+            FlurryAndroid.SetGender((byte)(gender == UserGender.Male ? 1 : gender == UserGender.Female ? 0 : -1));
+#endif
         }
 	}
 }

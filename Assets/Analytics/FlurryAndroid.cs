@@ -26,6 +26,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using UnityEngine;
 
 namespace Analytics
 {
@@ -431,8 +432,11 @@ namespace Analytics
 		/// </summary>
 		/// <param name="gender"></param>
 		public static void SetGender(byte gender)
-		{
-		}
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+			FlurryAgent.CallStatic("setGender", gender);
+#endif
+        }
 		
 		/// <summary>
 		/// Sets the Flurry userId for this session. The Flurry userId can be used to 

@@ -22,7 +22,6 @@
  *	SOFTWARE.
  */
 
-using System;
 using System.Collections.Generic;
 
 namespace Analytics
@@ -72,7 +71,7 @@ namespace Analytics
 		/// <param name="parameters">
 		/// An immutable copy of map containing Name-Value pairs of parameters.
 		/// </param>
-		void LogEvent(string eventName, IDictionary<string, string> parameters);
+		void LogEvent(string eventName, Dictionary<string, string> parameters);
 
 		/// <summary>
 		/// Records a timed event specified by eventName.
@@ -93,7 +92,7 @@ namespace Analytics
 		/// <param name="parameters">
 		/// An immutable copy of map containing Name-Value pairs of parameters.
 		/// </param>
-		void BeginLogEvent(string eventName, IDictionary<string, string> parameters);
+		void BeginLogEvent(string eventName, Dictionary<string, string> parameters);
 
 		/// <summary>
 		/// Ends a timed event specified by eventName and optionally updates parameters with 
@@ -116,7 +115,7 @@ namespace Analytics
 		/// <param name="parameters">
 		/// An immutable copy of map containing Name-Value pairs of parameters.
 		/// </param>
-		void EndLogEvent(string eventName, IDictionary<string, string> parameters);
+		void EndLogEvent(string eventName, Dictionary<string, string> parameters);
 
 		/// <summary>
 		/// Records an app exception. Commonly used to catch unhandled exceptions.

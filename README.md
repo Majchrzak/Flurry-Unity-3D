@@ -13,7 +13,6 @@ Place 'Analycis' folder in your Unity 3D project folder. See TestScene.unity for
 0.9.0
 
 ### Todo's
-* Support for UserGender enum.
 * Implement 'Page View' methods.
 
 ### License
