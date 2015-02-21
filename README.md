@@ -35,7 +35,7 @@ Due to Google restrictions, under Plugins/Android you can find Google Play Games
 
  * generate unique app id in Google Developer Console under Game Services tab.
  * replace 'APP_ID' fields in AndroidMainfest.xml to your existing app id value:
- ```xml
+ ```
 <meta-data android:name="com.google.android.gms.games.APP_ID" android:value="\ APP_ID" />
 <meta-data android:name="com.google.android.gms.appstate.APP_ID" android:value="\ APP_ID" />
  ```
