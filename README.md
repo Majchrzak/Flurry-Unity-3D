@@ -13,7 +13,7 @@ You can also find cross-platform analytics implementation in [Flurry.cs](https:/
 ```cpp
 private void Start()
 {
-    //For Flurry Android only:
+    // For Flurry Android only:
     FlurryAndroid.SetLogEnabled(true);
     
     // For Flurry iOS only:
@@ -35,6 +35,7 @@ Due to Google restrictions, under Plugins/Android you can find Google Play Games
 
  * generate unique app id in Google Developer Console under Game Services tab.
  * replace 'APP_ID' fields in AndroidMainfest.xml to your existing app id value:
+ 
  ```
 <meta-data android:name="com.google.android.gms.games.APP_ID" android:value="\ APP_ID" />
 <meta-data android:name="com.google.android.gms.appstate.APP_ID" android:value="\ APP_ID" />
