@@ -31,10 +31,20 @@ using UnityEngine;
 namespace Analytics
 {
 	/// <summary>
-	/// Flurry Android SDK 4.0.0 implementation
+	/// Flurry Android SDK 5.3.0 implementation
 	/// </summary>
 	public static class FlurryAndroid
 	{
+	    public enum EventRecordStatus
+	    {
+            Failed, 
+            Recorded, 
+            UniqueCountExceeded, 
+            ParamsCountExceeded, 
+            LogCountExceeded, 
+            LoggingDelayed
+	    }
+
 #if UNITY_ANDROID && !UNITY_EDITOR
 		private static readonly string s_FlurryAgentClassName = "com.flurry.android.FlurryAgent";
 		private static readonly string s_UnityPlayerClassName = "com.unity3d.player.UnityPlayer";
@@ -79,19 +89,37 @@ namespace Analytics
 			s_FlurryAgent = null;
 #endif
 		}
+
+        /// <summary>
+        /// Initialize the Flurry SDK.
+        /// </summary>
+        /// <param name="apiKey">
+        /// The API key for your application
+        /// </param>
+        public static void Init(string apiKey)
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+			using (AndroidJavaClass unityPlayer = new AndroidJavaClass(s_UnityPlayerClassName))
+			{
+				using (AndroidJavaObject activity = unityPlayer.GetStatic<AndroidJavaObject>(s_UnityPlayerActivityName))
+				{
+					FlurryAgent.CallStatic("init", activity, apiKey);
+				}
+			}
+#endif
+        }
 		
 		/// <summary>
-		/// Start or continue a Flurry session for the project denoted by apiKey.
+        /// Start or continue a Flurry session for the project.
 		/// </summary>
-		/// <param name="apiKey">The API key for this project.</param>
-		public static void OnStartSession(string apiKey)
+		public static void OnStartSession()
 		{
 #if UNITY_ANDROID && !UNITY_EDITOR
 			using (AndroidJavaClass unityPlayer = new AndroidJavaClass(s_UnityPlayerClassName))
 			{
 				using (AndroidJavaObject activity = unityPlayer.GetStatic<AndroidJavaObject>(s_UnityPlayerActivityName))
 				{
-					FlurryAgent.CallStatic("onStartSession", activity, apiKey);
+					FlurryAgent.CallStatic("onStartSession", activity);
 				}
 			}
 #endif
@@ -310,10 +338,10 @@ namespace Analytics
 		/// Log an event.
 		/// </summary>
 		/// <param name="eventId">The name/id of the event.</param>
-		public static void LogEvent(string eventId)
+        public static void LogEvent(string eventId)
 		{
 #if UNITY_ANDROID && !UNITY_EDITOR
-			FlurryAgent.CallStatic("logEvent", eventId);
+			FlurryAgent.CallStatic<AndroidJavaObject>("logEvent", eventId);
 #endif
 		}
 		
@@ -329,10 +357,10 @@ namespace Analytics
 #if UNITY_ANDROID && !UNITY_EDITOR
 			using (DictionaryConverter converter = new DictionaryConverter(parameters))
 			{
-				FlurryAgent.CallStatic("logEvent", eventId, (AndroidJavaObject)converter);
+				FlurryAgent.CallStatic<AndroidJavaObject>("logEvent", eventId, (AndroidJavaObject)converter);
 			}
 #endif
-		}
+        }
 		
 		/// <summary>
 		/// Log a timed event.
@@ -342,9 +370,9 @@ namespace Analytics
 		public static void LogEvent(string eventId, bool timed)
 		{
 #if UNITY_ANDROID && !UNITY_EDITOR
-			FlurryAgent.CallStatic("logEvent", eventId, timed);
+			FlurryAgent.CallStatic<AndroidJavaObject>("logEvent", eventId, timed);
 #endif
-		}
+        }
 		
 		/// <summary>
 		/// Log a timed event with parameters. Log a timed event with parameters with the 
@@ -360,10 +388,10 @@ namespace Analytics
 #if UNITY_ANDROID && !UNITY_EDITOR
 			using (DictionaryConverter converter = new DictionaryConverter(parameters))
 			{
-				FlurryAgent.CallStatic("logEvent", eventId, (AndroidJavaObject)converter, timed);
+				FlurryAgent.CallStatic<AndroidJavaObject>("logEvent", eventId, (AndroidJavaObject)converter, timed);
 			}
 #endif
-		}
+        }
 		
 		/// <summary>
 		/// End a timed event.
@@ -391,28 +419,18 @@ namespace Analytics
 				FlurryAgent.CallStatic("endTimedEvent", eventId, (AndroidJavaObject)converter);
 			}
 #endif
-		}
+        }
 		
 		/// <summary>
 		/// Log an error with the Flurry service.
 		/// </summary>
 		/// <param name="errorId">The name/ID of the error</param>
 		/// <param name="message">The message of the error</param>
-		/// <param name="exception">The exception of the error</param>
-		public static void OnError(string errorId, string message, Exception exception)
+        /// <param name="errorClass">The class of the error</param>
+		public static void OnError(string errorId, string message, string errorClass)
 		{
 #if UNITY_ANDROID && !UNITY_EDITOR
-			if (exception != null)
-			{
-				using (AndroidJavaObject throwable = new AndroidJavaObject("java.lang.Throwable", exception.Message))
-				{
-					FlurryAgent.CallStatic("onError", errorId, message, throwable);                
-				}
-			}
-			else
-			{
-				FlurryAgent.CallStatic("onError", errorId, message, null);
-			}
+            FlurryAgent.CallStatic("onError", errorId, message, errorClass);
 #endif
 		}
 		
@@ -475,5 +493,5 @@ namespace Analytics
 			}
 		}
 #endif
-	}
+    }
 }

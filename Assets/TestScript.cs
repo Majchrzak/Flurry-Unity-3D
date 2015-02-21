@@ -1,12 +1,13 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Diagnostics;
+using UnityEngine;
 using Analytics;
+using Debug = UnityEngine.Debug;
 
 public class TestScript : MonoBehaviour 
 {
 	[Header("Flurry Settings")]
-	[SerializeField] private string _iosApiKey = "";
-	[SerializeField] private string _androidApiKey = "";
+	[SerializeField] private string _iosApiKey = string.Empty;
+	[SerializeField] private string _androidApiKey = string.Empty;
 	
 	/// <summary>
 	/// Create Flurry singleton instance and log single event.
@@ -19,6 +20,7 @@ public class TestScript : MonoBehaviour
 		Assert(!string.IsNullOrEmpty(_iosApiKey), "_iosApiKey is empty!", this);
 		Assert(!string.IsNullOrEmpty(_androidApiKey), "_androidApiKey is empty!", this);
 
+        FlurryAndroid.SetLogEnabled(true);
 		service.StartSession(_iosApiKey, _androidApiKey);
 	}
 
@@ -72,7 +74,7 @@ public class TestScript : MonoBehaviour
 		
 		if (Button("Log Error", offset++))
 		{
-			service.LogError("test-script-error", "Test Error");
+			service.LogError("test-script-error", "Test Error", this);
 		}
 	}
 
@@ -90,6 +92,7 @@ public class TestScript : MonoBehaviour
 	}
 
 	#region [Assert Methods]
+    [Conditional("UNITY_EDITOR")]
 	private void Assert(bool condition, string message, Object context)
 	{
 		if (condition)
@@ -100,6 +103,7 @@ public class TestScript : MonoBehaviour
 		Debug.LogError(message, context);
 	}
 
+    [Conditional("UNITY_EDITOR")]
 	private void AssertNotNull(object target, string message, Object context)
 	{
 		Assert(target != null, message, context);

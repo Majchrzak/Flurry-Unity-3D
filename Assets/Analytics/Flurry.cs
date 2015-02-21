@@ -89,7 +89,7 @@ namespace Analytics
             if (type != LogType.Error)
                 return;
 
-			LogError("Uncaught Unity Exception", logString);
+			LogError("Uncaught Unity Exception", logString, this);
         }
 
         /// <summary>
@@ -103,7 +103,8 @@ namespace Analytics
 #elif UNITY_IOS
 		    FlurryIOS.StartSession(apiKeyIOS);
 #elif UNITY_ANDROID
-		    FlurryAndroid.OnStartSession(apiKeyAndroid);
+            FlurryAndroid.Init(apiKeyAndroid);
+		    FlurryAndroid.OnStartSession();
 #endif
         }
 
@@ -192,9 +193,9 @@ namespace Analytics
 #if UNITY_EDITOR
 
 #elif UNITY_IOS
-		FlurryIOS.LogEvent(eventName);
+		FlurryIOS.LogEvent(eventName, true);
 #elif UNITY_ANDROID
-		FlurryAndroid.LogEvent(eventName);
+		FlurryAndroid.LogEvent(eventName, true);
 #endif
         }
 
@@ -232,9 +233,9 @@ namespace Analytics
 #if UNITY_EDITOR
 
 #elif UNITY_IOS
-            FlurryIOS.EndTimedEvent(eventName, null);
+            FlurryIOS.EndTimedEvent(eventName, new Dictionary<string, string>());
 #elif UNITY_ANDROID
-            FlurryAndroid.EndTimedEvent(eventName, null);
+            FlurryAndroid.EndTimedEvent(eventName);
 #endif
         }
 
@@ -266,14 +267,14 @@ namespace Analytics
 		/// <param name="errorID">Name of the error.</param>
 		/// <param name="message">The message to associate with the error.</param>
 		/// <param name="exception">The exception object to report.</param>
-		public void LogError(string errorID, string message)
+		public void LogError(string errorID, string message, object target)
 		{
 #if UNITY_EDITOR
 			
 #elif UNITY_IOS
 			FlurryIOS.LogError(errorID, message, null);
 #elif UNITY_ANDROID
-			FlurryAndroid.OnError(errorID, message, null);
+			FlurryAndroid.OnError(errorID, message, target.GetType().Name);
 #endif
         }
 

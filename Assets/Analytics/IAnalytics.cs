@@ -122,8 +122,8 @@ namespace Analytics
 		/// </summary>
 		/// <param name="errorID">Name of the error.</param>
 		/// <param name="message">The message to associate with the error.</param>
-		/// <param name="exception">The exception object to report.</param>
-		void LogError(string errorID, string message);
+        /// <param name="target">The error source to report.</param>
+		void LogError(string errorID, string message, object target);
 
 		/// <summary>
 		/// Assign a unique id for a user in your app.
