@@ -43,7 +43,7 @@ Due to Google restrictions, under Plugins/Android you can find Google Play Games
  * set proper package name in Unity project settings.
  
 ####iOS:
- * TODO
+ * Add Security.framework
 
 ### Version
 0.9.9
