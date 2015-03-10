@@ -118,8 +118,8 @@ namespace Analytics
 
 #elif UNITY_IOS
             FlurryIOS.SetAppVersion(version);
-#elif UNITY_ANDOIRD
-            FlurryAndoird.SetVersionName(version);
+#elif UNITY_ANDROID
+            FlurryAndroid.SetVersionName(version);
 #endif
         }
 
@@ -157,7 +157,7 @@ namespace Analytics
 
 #elif UNITY_IOS
         FlurryIOS.LogEvent(eventName, parameters);
-#elif UNITY_ANDOIRD
+#elif UNITY_ANDROID
         FlurryAndroid.LogEvent(eventName, parameters);
 #endif
         }
