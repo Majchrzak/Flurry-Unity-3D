@@ -34,11 +34,10 @@ See TestScene.unity for more details.
 Due to Google restrictions, under Plugins/Android you can find Google Play Games library that is required for proper working of Flurry for Android. Feel free to replace that library with your existing Google Play Games implementation.
 
  * generate unique app id in Google Developer Console under Game Services tab.
- * replace 'APP_ID' fields in AndroidMainfest.xml to your existing app id value:
+ * replace 'APP_ID' field in AndroidMainfest.xml to your existing app id value:
  
  ```
 <meta-data android:name="com.google.android.gms.games.APP_ID" android:value="\ APP_ID" />
-<meta-data android:name="com.google.android.gms.appstate.APP_ID" android:value="\ APP_ID" />
  ```
  * set proper package name in Unity project settings.
  
