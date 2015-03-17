@@ -26,7 +26,6 @@
         <!-- Google Play Games data (required by google-play-services.jar) -->
         <meta-data android:name="com.google.android.gms.version" android:value="6587000" />
         <meta-data android:name="com.google.android.gms.games.APP_ID" android:value="\ APP_ID" />
-        <meta-data android:name="com.google.android.gms.appstate.APP_ID" android:value="\ APP_ID" />
       
         <!-- Default Unity 3D activity -->
         <activity android:name="com.unity3d.player.UnityPlayerNativeActivity"
