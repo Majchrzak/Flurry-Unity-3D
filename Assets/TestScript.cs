@@ -20,7 +20,7 @@ public class TestScript : MonoBehaviour
 		Assert(!string.IsNullOrEmpty(_iosApiKey), "_iosApiKey is empty!", this);
 		Assert(!string.IsNullOrEmpty(_androidApiKey), "_androidApiKey is empty!", this);
 
-        FlurryAndroid.SetLogEnabled(true);
+		service.SetLogLevel(LogLevel.All);
 		service.StartSession(_iosApiKey, _androidApiKey);
 	}
 

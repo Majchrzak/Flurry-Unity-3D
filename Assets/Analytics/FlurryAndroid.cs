@@ -240,7 +240,7 @@ namespace Analytics
 		/// Set the log level of the internal Flurry SDK logging.
 		/// </summary>
 		/// <param name="logLevel">The level to set it to.</param>
-		public static void SetLogLevel(int logLevel)
+		public static void SetLogLevel(LogLevel logLevel)
 		{
 #if UNITY_ANDROID && !UNITY_EDITOR
 			FlurryAgent.CallStatic("setLogLevel", (int)logLevel);

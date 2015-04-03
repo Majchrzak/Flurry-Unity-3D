@@ -34,38 +34,22 @@ namespace Analytics
     /// Flurry multiplatform implementation
     /// </summary>
     public sealed class Flurry : MonoSingleton<Flurry>, IAnalytics
-    {	
-        /// <summary>
-        /// Log level
-        /// </summary>
-        public enum FlurryLogLevel
-        {
-            /// <summary>
-            /// No output
-            /// </summary>
-            FlurryLogLevelNone = 0,
-            /// <summary>
-            /// Default, outputs only critical log events
-            /// </summary>
-            FlurryLogLevelCriticalOnly,
-            /// <summary>
-            /// Debug level, outputs critical and main log events
-            /// </summary>
-            FlurryLogLevelDebug,
-            /// <summary>
-            /// Highest level, outputs all log events
-            /// </summary>
-            FlurryLogLevelAll
-        }
-
+    {
+		#region [Initialization]
         /// <summary>
         /// 
         /// </summary>
         private void Awake()
         {
+#if UNITY_5_0
+			Application.logMessageReceived += ErrorHandler;
+#elif
             Application.RegisterLogCallback(ErrorHandler);
+#endif
         }
+		#endregion
 
+		#region [Internal Event Handlers]
         /// <summary>
         /// 
         /// </summary>
@@ -74,7 +58,6 @@ namespace Analytics
 #if UNITY_ANDROID && !UNITY_EDITOR
             FlurryAndroid.Dispose();
 #endif
-
 			base.OnDestroy();
         }
 
@@ -84,14 +67,18 @@ namespace Analytics
         /// <param name="logString"></param>
         /// <param name="stackTrace"></param>
         /// <param name="type"></param>
-        private void ErrorHandler(string logString, string stackTrace, LogType type)
+        private void ErrorHandler(string condition, string stackTrace, LogType type)
         {
-            if (type != LogType.Error)
-                return;
+			if (type != LogType.Error) 
+			{
+				return;
+			}
 
-			LogError("Uncaught Unity Exception", logString, this);
+			LogError("Uncaught Unity Exception", condition, this);
         }
+		#endregion
 
+		#region [Session Calls]
         /// <summary>
         /// Start or continue a Flurry session for the project denoted by apiKey.
         /// </summary>
@@ -107,7 +94,9 @@ namespace Analytics
 		    FlurryAndroid.OnStartSession();
 #endif
         }
+		#endregion
 
+		#region [Pre-Session Calls]
         /// <summary>
         /// Explicitly specifies the App Version that Flurry will use to group Analytics data.
         /// </summary>
@@ -124,6 +113,23 @@ namespace Analytics
         }
 
 		/// <summary>
+		/// Generates debug logs to console.
+		/// </summary>
+		/// <param name="level">Log level.</param>
+		public void SetLogLevel(LogLevel level)
+		{
+#if UNITY_EDITOR
+
+#elif UNITY_IOS
+			FlurryIOS.SetLogLevel(level);
+#elif UNITY_ANDROID
+			FlurryAndroid.SetLogLevel(level);
+#endif
+		}
+		#endregion
+
+		#region [Event and Error Logging]
+		/// <summary>
 		/// Records a custom event specified by eventName.
 		/// </summary>
 		/// <param name="eventName">
@@ -135,9 +141,9 @@ namespace Analytics
 #if UNITY_EDITOR
 
 #elif UNITY_IOS
-        FlurryIOS.LogEvent(eventName);
+        	FlurryIOS.LogEvent(eventName);
 #elif UNITY_ANDROID
-        FlurryAndroid.LogEvent(eventName);
+        	FlurryAndroid.LogEvent(eventName);
 #endif
         }
 
@@ -156,9 +162,9 @@ namespace Analytics
 #if UNITY_EDITOR
 
 #elif UNITY_IOS
-        FlurryIOS.LogEvent(eventName, parameters);
+        	FlurryIOS.LogEvent(eventName, parameters);
 #elif UNITY_ANDROID
-        FlurryAndroid.LogEvent(eventName, parameters);
+        	FlurryAndroid.LogEvent(eventName, parameters);
 #endif
         }
 
@@ -175,9 +181,9 @@ namespace Analytics
 #if UNITY_EDITOR
 
 #elif UNITY_IOS
-        FlurryIOS.LogEvent(eventName, timed);
+        	FlurryIOS.LogEvent(eventName, timed);
 #elif UNITY_ANDROID
-        FlurryAndroid.LogEvent(eventName, timed);
+        	FlurryAndroid.LogEvent(eventName, timed);
 #endif
         }
 
@@ -193,9 +199,9 @@ namespace Analytics
 #if UNITY_EDITOR
 
 #elif UNITY_IOS
-		FlurryIOS.LogEvent(eventName, true);
+			FlurryIOS.LogEvent(eventName, true);
 #elif UNITY_ANDROID
-		FlurryAndroid.LogEvent(eventName, true);
+			FlurryAndroid.LogEvent(eventName, true);
 #endif
         }
 
@@ -277,7 +283,9 @@ namespace Analytics
 			FlurryAndroid.OnError(errorID, message, target.GetType().Name);
 #endif
         }
+		#endregion
 
+		#region [User Info]
         /// <summary>
         /// Assign a unique id for a user in your app.
         /// </summary>
@@ -314,7 +322,7 @@ namespace Analytics
         /// <param name="gender">
         /// Reported gender of user. Allowable values are 'm' or 'c' 'f'
         /// </param>
-        public void LogUserGender(UserGender gender)
+		public void LogUserGender(UserGender gender)
         {
 #if UNITY_EDITOR
 
@@ -324,5 +332,6 @@ namespace Analytics
             FlurryAndroid.SetGender((byte)(gender == UserGender.Male ? 1 : gender == UserGender.Female ? 0 : -1));
 #endif
         }
+		#endregion
 	}
 }

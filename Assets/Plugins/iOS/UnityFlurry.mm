@@ -52,9 +52,11 @@ char* strDup(const char* str)
 NSMutableDictionary* keyValueToDict(const char* keys, const char* values)
 {
     if (!keys || !values)
+    {
         return nil;
+    }
     
-	NSMutableDictionary* dict = [[[NSMutableDictionary alloc] init] autorelease];
+	NSMutableDictionary* dict = [[NSMutableDictionary alloc] init];
 
 	NSArray* keysArray = [strToNSStr(keys) componentsSeparatedByString : @"\n"];
 	NSArray* valuesArray = [strToNSStr(values) componentsSeparatedByString : @"\n"];
@@ -75,6 +77,14 @@ extern "C"
 	void StartSessionImpl(const char* apiKey)
 	{
 		[Flurry startSession: strToNSStr(apiKey)];
+	}
+
+	/*
+	*
+	*/
+	bool ActiveSessionExistsImpl()
+	{
+		return [Flurry activeSessionExists];
 	}
 
 	/*
@@ -152,14 +162,6 @@ extern "C"
 	/*
 	*
 	*/
-	void SetSecureTransportEnabledImpl(bool value)
-	{
-        [Flurry setSecureTransportEnabled:value];
-	}
-
-	/*
-	*
-	*/
 	void SetCrashReportingEnabledImpl(bool value)
 	{
         [Flurry setCrashReportingEnabled:value];
@@ -168,17 +170,17 @@ extern "C"
 	/*
 	*
 	*/
-	void LogEventImplA(const char* eventName)
+	int LogEventImplA(const char* eventName)
 	{
-        [Flurry logEvent:strToNSStr(eventName)];
+        return [Flurry logEvent:strToNSStr(eventName)];
 	}
 
 	/*
 	*
 	*/
-	void LogEventImplB(const char* eventName, const char* keys, const char* values)
+	int LogEventImplB(const char* eventName, const char* keys, const char* values)
 	{
-		[Flurry logEvent:strToNSStr(eventName) withParameters:keyValueToDict(keys, values)];
+		return [Flurry logEvent:strToNSStr(eventName) withParameters:keyValueToDict(keys, values)];
 	}
 
 	/*
@@ -186,23 +188,23 @@ extern "C"
 	*/
 	void LogErrorImpl(const char* errorID, const char* message, const char* exceptionName, const char* exceptionReason)
 	{
-        [Flurry logError:strToNSStr(errorID) message:strToNSStr(message) exception:[[[NSException alloc] initWithName:strToNSStr(exceptionName) reason:strToNSStr(exceptionReason) userInfo:nil] autorelease]];
+        [Flurry logError:strToNSStr(errorID) message:strToNSStr(message) exception:[[NSException alloc] initWithName:strToNSStr(exceptionName) reason:strToNSStr(exceptionReason) userInfo:nil]];
 	}
 
 	/*
 	*
 	*/
-	void LogEventImplC(const char* eventName, bool timed)
+	int LogEventImplC(const char* eventName, bool timed)
 	{
-        [Flurry logEvent:strToNSStr(eventName) timed:timed];
+        return [Flurry logEvent:strToNSStr(eventName) timed:timed];
 	}
 
 	/*
 	*
 	*/
-	void LogEventImplD(const char* eventName, const char* keys, const char* values, bool timed)
+	int LogEventImplD(const char* eventName, const char* keys, const char* values, bool timed)
 	{
-        [Flurry logEvent:strToNSStr(eventName) withParameters:keyValueToDict(keys, values) timed:timed];
+        return [Flurry logEvent:strToNSStr(eventName) withParameters:keyValueToDict(keys, values) timed:timed];
 	}
 
 	/*
@@ -211,6 +213,14 @@ extern "C"
 	void EndTimedEventImpl(const char* eventName, const char* keys, const char* values)
 	{
         [Flurry endTimedEvent:strToNSStr(eventName) withParameters:keyValueToDict(keys, values)];
+	}
+
+	/*
+	*
+	*/
+	void LogPageViewImpl()
+	{
+		[Flurry logPageView];
 	}
 
 	/*

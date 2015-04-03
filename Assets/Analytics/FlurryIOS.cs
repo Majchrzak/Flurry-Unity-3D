@@ -30,13 +30,16 @@ using System.Runtime.InteropServices;
 namespace Analytics
 {
 	/// <summary>
-	/// Flurry iPhone SDK 5.0.0 implementation
+	/// Flurry iPhone SDK 6.2.0 implementation
 	/// </summary>
 	public static class FlurryIOS
 	{
+		#region [Native]
 #if UNITY_IOS && !UNITY_EDITOR
 		[DllImport("__Internal")]
 		private static extern void StartSessionImpl(string apiKey);
+		[DllImport("__Internal")]
+		private static extern bool ActiveSessionExistsImpl();
 		[DllImport("__Internal")]
 		private static extern void PauseBackgroundSessionImpl();
 		[DllImport("__Internal")]
@@ -56,21 +59,21 @@ namespace Analytics
 		[DllImport("__Internal")]
 		private static extern void SetSessionContinueSecondsImpl(int seconds);
 		[DllImport("__Internal")]
-		private static extern void SetSecureTransportEnabledImpl(bool value);
-		[DllImport("__Internal")]
 		private static extern void SetCrashReportingEnabledImpl(bool value);
 		[DllImport("__Internal")]
-		private static extern void LogEventImplA(string eventName);
+		private static extern int LogEventImplA(string eventName);
 		[DllImport("__Internal")]
-		private static extern void LogEventImplB(string eventName, string keys, string values);
+		private static extern int LogEventImplB(string eventName, string keys, string values);
 		[DllImport("__Internal")]
 		private static extern void LogErrorImpl(string errorID, string message, string exceptionName, string exceptionReason);
 		[DllImport("__Internal")]
-		private static extern void LogEventImplC(string eventName, bool timed);
+		private static extern int LogEventImplC(string eventName, bool timed);
 		[DllImport("__Internal")]
-		private static extern void LogEventImplD(string eventName, string keys, string values, bool timed);
+		private static extern int LogEventImplD(string eventName, string keys, string values, bool timed);
 		[DllImport("__Internal")]
 		private static extern void EndTimedEventImpl(string eventName, string keys, string values);
+		[DllImport("__Internal")]
+		private static extern void LogPageViewImpl();
 		[DllImport("__Internal")]
 		private static extern void SetUserIdImpl(string userID);
 		[DllImport("__Internal")]
@@ -88,7 +91,9 @@ namespace Analytics
 		[DllImport("__Internal")]
 		private static extern void SetEventLoggingEnabledImpl(bool value);
 #endif
+		#endregion
 
+		#region [Session Calls]
 		/// <summary>
 		/// Start a Flurry session for the project denoted by apiKey.
 		/// </summary>
@@ -97,6 +102,19 @@ namespace Analytics
 		{
 #if UNITY_IOS && !UNITY_EDITOR
 			StartSessionImpl(apiKey);
+#endif
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns><</returns>
+		public static bool ActiveSessionExists()
+		{
+#if UNITY_IOS && !UNITY_EDITOR
+			return ActiveSessionExistsImpl();
+#else
+			return false;
 #endif
 		}
 		
@@ -134,13 +152,15 @@ namespace Analytics
 		public static void AddOrigin(string originName, string originVersion, Dictionary<string, string> parameters)
 		{
 #if UNITY_IOS && !UNITY_EDITOR
-			string keys = "";
-			string values = "";
+			string keys = string.Empty;
+			string values = string.Empty;
 			
 			AddOriginImplB(originName, originVersion, keys, values);
 #endif
 		}
-		
+		#endregion
+
+		#region [Pre-Session Calls]
 		/// <summary>
 		/// Explicitly specifies the App Version that Flurry will use to group Analytics data.
 		/// </summary>
@@ -192,8 +212,8 @@ namespace Analytics
 		/// <summary>
 		/// Generates debug logs to console.
 		/// </summary>
-		/// <param name="level">Log level</param>
-		public static void SetLogLevel(int level)
+		/// <param name="level">Log level.</param>
+		public static void SetLogLevel(LogLevel level)
 		{
 #if UNITY_IOS && !UNITY_EDITOR
 			SetLogLevelImpl((int)level);
@@ -210,18 +230,7 @@ namespace Analytics
 			SetSessionContinueSecondsImpl(seconds);
 #endif
 		}
-		
-		/// <summary>
-		/// Send data over a secure transport.
-		/// </summary>
-		/// <param name="value">true to send data over secure connection.</param>
-		public static void SetSecureTransportEnabled(bool value)
-		{
-#if UNITY_IOS && !UNITY_EDITOR
-			SetSecureTransportEnabledImpl(value);
-#endif
-		}
-		
+
 		/// <summary>
 		/// Enable automatic collection of crash reports.
 		/// </summary>
@@ -232,7 +241,9 @@ namespace Analytics
 			SetCrashReportingEnabledImpl(value);
 #endif
 		}
-		
+		#endregion
+
+		#region [Event and Error Logging]
 		/// <summary>
 		/// Records a custom event specified by eventName.
 		/// </summary>
@@ -240,10 +251,12 @@ namespace Analytics
 		/// Name of the event. For maximum effectiveness, we recommend using a naming scheme 
 		/// that can be easily understood by non-technical people in your business domain.
 		/// </param>
-		public static void LogEvent(string eventName)
+		public static EventRecordStatus LogEvent(string eventName)
 		{
 #if UNITY_IOS && !UNITY_EDITOR
-			LogEventImplA(eventName);
+			return (EventRecordStatus)LogEventImplA(eventName);
+#else
+			return EventRecordStatus.Failed;
 #endif
 		}
 		
@@ -257,12 +270,15 @@ namespace Analytics
 		/// <param name="parameters">
 		/// An immutable copy of map containing Name-Value pairs of parameters.
 		/// </param>
-		public static void LogEvent(string eventName, Dictionary<string, string> parameters)
+		public static EventRecordStatus LogEvent(string eventName, Dictionary<string, string> parameters)
 		{
 #if UNITY_IOS && !UNITY_EDITOR
 			string keys, values;
 			ToKeyValue(parameters, out keys, out values);
-			LogEventImplB(eventName, keys, values);
+
+			return (EventRecordStatus)LogEventImplB(eventName, keys, values);
+#else
+			return EventRecordStatus.Failed;
 #endif
 		}
 		
@@ -276,9 +292,13 @@ namespace Analytics
 		{
 #if UNITY_IOS && !UNITY_EDITOR
 			if (exception != null)
+			{
 				LogErrorImpl(errorID, message, exception.GetType().Name, exception.Message);
+			}
 			else
+			{
 				LogErrorImpl(errorID, message, null, null);
+			}
 #endif
 		}
 		
@@ -290,10 +310,12 @@ namespace Analytics
 		/// that can be easily understood by non-technical people in your business domain.
 		/// </param>
 		/// <param name="timed">Specifies the event will be timed.</param>
-		public static void LogEvent(string eventName, bool timed)
+		public static EventRecordStatus LogEvent(string eventName, bool timed)
 		{
 #if UNITY_IOS && !UNITY_EDITOR
-			LogEventImplC(eventName, timed);
+			return (EventRecordStatus)LogEventImplC(eventName, timed);
+#else
+			return EventRecordStatus.Failed;
 #endif
 		}
 		
@@ -308,12 +330,15 @@ namespace Analytics
 		/// An immutable copy of map containing Name-Value pairs of parameters.
 		/// </param>
 		/// <param name="timed">Specifies the event will be timed.</param>
-		public static void LogEvent(string eventName, Dictionary<string, string> parameters, bool timed)
+		public static EventRecordStatus LogEvent(string eventName, Dictionary<string, string> parameters, bool timed)
 		{
 #if UNITY_IOS && !UNITY_EDITOR
 			string keys, values;
 			ToKeyValue(parameters, out keys, out values);
-			LogEventImplD(eventName, keys, values, timed);
+
+			return (EventRecordStatus)LogEventImplD(eventName, keys, values, timed);
+#else
+			return EventRecordStatus.Failed;
 #endif
 		}
 		
@@ -336,7 +361,40 @@ namespace Analytics
 			EndTimedEventImpl(eventName, keys, values);
 #endif
 		}
-		
+		#endregion
+
+		#region [Page View Methods]
+        /// <summary>
+        /// Automatically track page views on a UINavigationController or UITabBarController.
+        /// </summary>
+        /// <param name="target">The navigation or tab bar controller.</param>
+		public static void LogAllPageViewsForTarget(IntPtr target)
+		{
+            throw new NotSupportedException();
+		}
+
+        /// <summary>
+        /// Stops logging page views on previously observed with logAllPageViewsForTarget: 
+        /// UINavigationController or UITabBarController.
+        /// </summary>
+        /// <param name="target">The navigation or tab bar controller.</param>
+		public static void StopLogPageViewsForTarget(IntPtr target)
+		{
+            throw new NotSupportedException();
+		}
+
+		/// <summary>
+		/// Explicitly track a page view during a session.
+		/// </summary>
+		public static void LogPageView()
+		{
+#if UNITY_IOS && !UNITY_EDITOR
+			LogPageViewImpl();
+#endif
+		}
+		#endregion
+
+		#region [User Info]
 		/// <summary>
 		/// Assign a unique id for a user in your app.
 		/// </summary>
@@ -371,7 +429,9 @@ namespace Analytics
 			SetGenderImpl(gender);
 #endif
 		}
-		
+		#endregion
+
+		#region [Location Reporting]
 		/// <summary>
 		/// Set the location of the session.
 		/// </summary>
@@ -389,7 +449,9 @@ namespace Analytics
 			SetLatitudeImpl(latitude, longitude, horizontalAccuracy, verticalAccuracy);
 #endif
 		}
-		
+		#endregion
+
+		#region [Session Reporting Calls]
 		/// <summary>
 		/// Set session to report when app closes.
 		/// </summary>
@@ -439,7 +501,9 @@ namespace Analytics
 			SetEventLoggingEnabledImpl(value);
 #endif
 		}
-		
+		#endregion
+
+		#region [Helpers]
 		/// <summary>
 		/// Converts string dictionary to separated key and value
 		/// </summary>
@@ -457,5 +521,6 @@ namespace Analytics
 				values = string.Format("{0}\n{1}", values, pair.Value);
 			}
 		}
+		#endregion
 	}
 }

@@ -26,6 +26,7 @@ using System.Collections.Generic;
 
 namespace Analytics
 {
+	#region [Enums]
 	/// <summary>
 	/// User gender
 	/// </summary>
@@ -37,21 +38,69 @@ namespace Analytics
 	}
 
 	/// <summary>
+	/// Log level
+	/// </summary>
+	public enum LogLevel
+	{
+		/// <summary>
+		/// No output
+		/// </summary>
+		None = 0,
+		/// <summary>
+		/// Default, outputs only critical log events
+		/// </summary>
+		CriticalOnly,
+		/// <summary>
+		/// Debug level, outputs critical and main log events
+		/// </summary>
+		Debug,
+		/// <summary>
+		/// Highest level, outputs all log events
+		/// </summary>
+		All
+	}
+
+	/// <summary>
+	/// Event record status
+	/// </summary>
+	public enum EventRecordStatus
+	{
+		Failed = 0,
+		Recorded,
+		UniqueCountExceeded,
+		ParamsCountExceeded,
+		LogCountExceeded,
+		LoggingDelayed
+	}
+	#endregion
+
+	/// <summary>
 	/// I analytics interace.
 	/// </summary>
 	public interface IAnalytics
 	{
+		#region [Session Calls]
 		/// <summary>
 		/// Start a Flurry session for the project.
 		/// </summary>
 		void StartSession(string apiKeyIOS, string apiKeyAndroid);
+		#endregion
 
+		#region [Pre-Session Calls]
 		/// <summary>
 		/// Explicitly specifies the App Version that Flurry will use to group Analytics data.
 		/// </summary>
 		/// <param name="version">The custom version name.</param>
 		void LogAppVersion(string version);
 
+		/// <summary>
+		/// Generates debug logs to console.
+		/// </summary>
+		/// <param name="level">Log level.</param>
+		void SetLogLevel(LogLevel level);
+		#endregion
+
+		#region [Event and Error Logging]
 		/// <summary>
 		/// Records a custom event specified by eventName.
 		/// </summary>
@@ -124,7 +173,9 @@ namespace Analytics
 		/// <param name="message">The message to associate with the error.</param>
         /// <param name="target">The error source to report.</param>
 		void LogError(string errorID, string message, object target);
+		#endregion
 
+		#region [User Info]
 		/// <summary>
 		/// Assign a unique id for a user in your app.
 		/// </summary>
@@ -144,5 +195,6 @@ namespace Analytics
 		/// Reported gender of user. Allowable values are 'm' or 'c' 'f'
 		/// </param>
 		void LogUserGender(UserGender gender);
+		#endregion
 	}
 }
