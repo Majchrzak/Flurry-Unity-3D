@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 using Analytics;
 using Debug = UnityEngine.Debug;
@@ -54,7 +55,11 @@ public class TestScript : MonoBehaviour
 
 		if (Button("Log Event", offset++))
 		{
-			service.LogEvent("event");
+			service.LogEvent("event", new Dictionary<string, string>
+			{
+			    { "AppVersion", Application.version },
+                { "UnityVersion", Application.unityVersion }
+			});
 		}
 
 		if (Button("Begin Timed Event", offset++))
@@ -72,7 +77,7 @@ public class TestScript : MonoBehaviour
 			//TODO: impl
 		}
 		
-		if (Button("Log Error", offset++))
+		if (Button("Log Error", offset))
 		{
 			service.LogError("test-script-error", "Test Error", this);
 		}

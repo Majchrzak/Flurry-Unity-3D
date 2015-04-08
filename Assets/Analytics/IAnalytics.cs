@@ -98,60 +98,60 @@ namespace Analytics
 		/// </summary>
 		/// <param name="level">Log level.</param>
 		void SetLogLevel(LogLevel level);
-		#endregion
+        #endregion
 
-		#region [Event and Error Logging]
-		/// <summary>
-		/// Records a custom event specified by eventName.
-		/// </summary>
-		/// <param name="eventName">
-		/// Name of the event. For maximum effectiveness, we recommend using a naming scheme 
-		/// that can be easily understood by non-technical people in your business domain.
-		/// </param>
-		void LogEvent(string eventName);
+        #region [Event and Error Logging]
+        /// <summary>
+        /// Records a custom event specified by eventName.
+        /// </summary>
+        /// <param name="eventName">
+        /// Name of the event. For maximum effectiveness, we recommend using a naming scheme 
+        /// that can be easily understood by non-technical people in your business domain.
+        /// </param>
+        EventRecordStatus LogEvent(string eventName);
 
-		/// <summary>
-		/// Records a custom parameterized event specified by eventName with parameters.
-		/// </summary>
-		/// <param name="eventName">
-		/// Name of the event. For maximum effectiveness, we recommend using a naming scheme 
-		/// that can be easily understood by non-technical people in your business domain.
-		/// </param>
-		/// <param name="parameters">
-		/// An immutable copy of map containing Name-Value pairs of parameters.
-		/// </param>
-		void LogEvent(string eventName, Dictionary<string, string> parameters);
+        /// <summary>
+        /// Records a custom parameterized event specified by eventName with parameters.
+        /// </summary>
+        /// <param name="eventName">
+        /// Name of the event. For maximum effectiveness, we recommend using a naming scheme 
+        /// that can be easily understood by non-technical people in your business domain.
+        /// </param>
+        /// <param name="parameters">
+        /// An immutable copy of map containing Name-Value pairs of parameters.
+        /// </param>
+        EventRecordStatus LogEvent(string eventName, Dictionary<string, string> parameters);
 
-		/// <summary>
-		/// Records a timed event specified by eventName.
-		/// </summary>
-		/// <param name="eventName">
-		/// Name of the event. For maximum effectiveness, we recommend using a naming scheme 
-		/// that can be easily understood by non-technical people in your business domain.
-		/// </param>
-		void BeginLogEvent(string eventName);
+        /// <summary>
+        /// Records a timed event specified by eventName.
+        /// </summary>
+        /// <param name="eventName">
+        /// Name of the event. For maximum effectiveness, we recommend using a naming scheme 
+        /// that can be easily understood by non-technical people in your business domain.
+        /// </param>
+        EventRecordStatus BeginLogEvent(string eventName);
 
-		/// <summary>
-		/// Records a custom parameterized timed event specified by eventName with parameters.
-		/// </summary>
-		/// <param name="eventName">
-		/// Name of the event. For maximum effectiveness, we recommend using a naming scheme 
-		/// that can be easily understood by non-technical people in your business domain.
-		/// </param>
-		/// <param name="parameters">
-		/// An immutable copy of map containing Name-Value pairs of parameters.
-		/// </param>
-		void BeginLogEvent(string eventName, Dictionary<string, string> parameters);
+        /// <summary>
+        /// Records a custom parameterized timed event specified by eventName with parameters.
+        /// </summary>
+        /// <param name="eventName">
+        /// Name of the event. For maximum effectiveness, we recommend using a naming scheme 
+        /// that can be easily understood by non-technical people in your business domain.
+        /// </param>
+        /// <param name="parameters">
+        /// An immutable copy of map containing Name-Value pairs of parameters.
+        /// </param>
+        EventRecordStatus BeginLogEvent(string eventName, Dictionary<string, string> parameters);
 
-		/// <summary>
-		/// Ends a timed event specified by eventName and optionally updates parameters with 
-		/// parameters.
-		/// </summary>
-		/// <param name="eventName">
-		/// Name of the event. For maximum effectiveness, we recommend using a naming scheme 
-		/// that can be easily understood by non-technical people in your business domain.
-		/// </param>
-		void EndLogEvent(string eventName);
+        /// <summary>
+        /// Ends a timed event specified by eventName and optionally updates parameters with 
+        /// parameters.
+        /// </summary>
+        /// <param name="eventName">
+        /// Name of the event. For maximum effectiveness, we recommend using a naming scheme 
+        /// that can be easily understood by non-technical people in your business domain.
+        /// </param>
+        void EndLogEvent(string eventName);
 
 		/// <summary>
 		/// Ends a timed event specified by eventName and optionally updates parameters with 

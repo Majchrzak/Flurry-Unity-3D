@@ -136,35 +136,35 @@ namespace Analytics
 		/// Name of the event. For maximum effectiveness, we recommend using a naming scheme 
 		/// that can be easily understood by non-technical people in your business domain.
 		/// </param>
-		public void LogEvent(string eventName)
+		public EventRecordStatus LogEvent(string eventName)
         {
 #if UNITY_EDITOR
-
+            return EventRecordStatus.Failed;
 #elif UNITY_IOS
-        	FlurryIOS.LogEvent(eventName);
+        	return FlurryIOS.LogEvent(eventName);
 #elif UNITY_ANDROID
-        	FlurryAndroid.LogEvent(eventName);
+        	return FlurryAndroid.LogEvent(eventName);
 #endif
         }
 
-		/// <summary>
-		/// Records a custom parameterized event specified by eventName with parameters.
-		/// </summary>
-		/// <param name="eventName">
-		/// Name of the event. For maximum effectiveness, we recommend using a naming scheme 
-		/// that can be easily understood by non-technical people in your business domain.
-		/// </param>
-		/// <param name="parameters">
-		/// An immutable copy of map containing Name-Value pairs of parameters.
-		/// </param>
-		public void LogEvent(string eventName, Dictionary<string, string> parameters)
+        /// <summary>
+        /// Records a custom parameterized event specified by eventName with parameters.
+        /// </summary>
+        /// <param name="eventName">
+        /// Name of the event. For maximum effectiveness, we recommend using a naming scheme 
+        /// that can be easily understood by non-technical people in your business domain.
+        /// </param>
+        /// <param name="parameters">
+        /// An immutable copy of map containing Name-Value pairs of parameters.
+        /// </param>
+        public EventRecordStatus LogEvent(string eventName, Dictionary<string, string> parameters)
         {
 #if UNITY_EDITOR
-
+            return EventRecordStatus.Failed;
 #elif UNITY_IOS
-        	FlurryIOS.LogEvent(eventName, parameters);
+        	return FlurryIOS.LogEvent(eventName, parameters);
 #elif UNITY_ANDROID
-        	FlurryAndroid.LogEvent(eventName, parameters);
+        	return FlurryAndroid.LogEvent(eventName, parameters);
 #endif
         }
 
@@ -176,14 +176,14 @@ namespace Analytics
         /// that can be easily understood by non-technical people in your business domain.
         /// </param>
         /// <param name="timed">Specifies the event will be timed.</param>
-        public void LogEvent(string eventName, bool timed)
+        public EventRecordStatus LogEvent(string eventName, bool timed)
         {
 #if UNITY_EDITOR
-
+            return EventRecordStatus.Failed;
 #elif UNITY_IOS
-        	FlurryIOS.LogEvent(eventName, timed);
+        	return FlurryIOS.LogEvent(eventName, timed);
 #elif UNITY_ANDROID
-        	FlurryAndroid.LogEvent(eventName, timed);
+        	return FlurryAndroid.LogEvent(eventName, timed);
 #endif
         }
 
@@ -194,14 +194,14 @@ namespace Analytics
 		/// Name of the event. For maximum effectiveness, we recommend using a naming scheme 
 		/// that can be easily understood by non-technical people in your business domain.
 		/// </param>
-		public void BeginLogEvent(string eventName)
+		public EventRecordStatus BeginLogEvent(string eventName)
         {
 #if UNITY_EDITOR
-
+            return EventRecordStatus.Failed;
 #elif UNITY_IOS
-			FlurryIOS.LogEvent(eventName, true);
+			return FlurryIOS.LogEvent(eventName, true);
 #elif UNITY_ANDROID
-			FlurryAndroid.LogEvent(eventName, true);
+			return FlurryAndroid.LogEvent(eventName, true);
 #endif
         }
 
@@ -215,14 +215,14 @@ namespace Analytics
 		/// <param name="parameters">
 		/// An immutable copy of map containing Name-Value pairs of parameters.
 		/// </param>
-		public void BeginLogEvent(string eventName, Dictionary<string, string> parameters)
+		public EventRecordStatus BeginLogEvent(string eventName, Dictionary<string, string> parameters)
 		{
 #if UNITY_EDITOR
-			
+			return EventRecordStatus.Failed;
 #elif UNITY_IOS
-			FlurryIOS.LogEvent(eventName, parameters, true);
+			return FlurryIOS.LogEvent(eventName, parameters, true);
 #elif UNITY_ANDROID
-			FlurryAndroid.LogEvent(eventName, parameters, true);
+			return FlurryAndroid.LogEvent(eventName, parameters, true);
 #endif
 		}
 
