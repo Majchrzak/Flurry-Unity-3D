@@ -63,7 +63,7 @@ NSMutableDictionary* keyValueToDict(const char* keys, const char* values)
 
 	for (int i = 0; i < [keysArray count]; i++)
 	{
-		[dict setObject:[keysArray objectAtIndex: i] forKey:[valuesArray objectAtIndex: i]];
+		[dict setObject:[valuesArray objectAtIndex: i] forKey:[keysArray objectAtIndex: i]];
 	}
 
 	return dict;
