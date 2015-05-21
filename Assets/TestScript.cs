@@ -57,7 +57,9 @@ public class TestScript : MonoBehaviour
 		{
 			service.LogEvent("event", new Dictionary<string, string>
 			{
+#if UNITY_5
 			    { "AppVersion", Application.version },
+#endif
                 { "UnityVersion", Application.unityVersion }
 			});
 		}

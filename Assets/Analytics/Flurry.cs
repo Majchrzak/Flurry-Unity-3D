@@ -41,9 +41,9 @@ namespace Analytics
         /// </summary>
         private void Awake()
         {
-#if UNITY_5_0
+#if UNITY_5
 			Application.logMessageReceived += ErrorHandler;
-#elif
+#else
             Application.RegisterLogCallback(ErrorHandler);
 #endif
         }
