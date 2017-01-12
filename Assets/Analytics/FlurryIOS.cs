@@ -512,14 +512,22 @@ namespace Analytics
 		/// <param name="values"></param>
 		private static void ToKeyValue(Dictionary<string, string> dictionary, out string keys, out string values)
 		{
-			keys = string.Empty;
-			values = string.Empty;
-			
-			foreach (KeyValuePair<string, string> pair in dictionary)
+			var keysBuilder = new StringBuilder();
+            var valuesBuilder = new StringBuilder();
+            int i = 0;
+            int length = dictionary.Count;
+            foreach (KeyValuePair<string, string> pair in dictionary)
 			{
-				keys = string.Format("{0}\n{1}", keys, pair.Key);
-				values = string.Format("{0}\n{1}", values, pair.Value);
+                keysBuilder.Append(pair.Key);
+                valuesBuilder.Append(pair.Value);
+                if (++i < length)
+                {
+                    keysBuilder.Append("\n");
+                    valuesBuilder.Append("\n");
+                }
 			}
+            keys = keysBuilder.ToString();
+            values = valuesBuilder.ToString();
 		}
 		#endregion
 	}
